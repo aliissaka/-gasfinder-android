@@ -7,10 +7,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.gasfinder.app.network.LoginRequest
 import com.gasfinder.app.network.RetrofitClient
+import com.gasfinder.app.network.TokenManager
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(onLoginSuccess: () -> Unit) {
     var phone by remember { mutableStateOf("") }
     var pin by remember { mutableStateOf("") }
     var statusMessage by remember { mutableStateOf("") }
@@ -49,10 +50,14 @@ fun LoginScreen() {
                 scope.launch {
                     try {
                         val response = RetrofitClient.authApi.login(LoginRequest(phone, pin))
-                        statusMessage = if (response.isSuccessful) {
-                            "Logged in! Role: ${response.body()?.role}"
+                        if (response.isSuccessful) {
+                            val body = response.body()
+                            if (body != null) {
+                                TokenManager.saveAuth(body.accessToken, body.role, body.retailerId)
+                                onLoginSuccess()
+                            }
                         } else {
-                            "Login failed: ${response.code()}"
+                            statusMessage = "Login failed: ${response.code()}"
                         }
                     } catch (e: Exception) {
                         statusMessage = "Error: ${e.message}"

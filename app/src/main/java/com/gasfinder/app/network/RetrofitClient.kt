@@ -11,6 +11,7 @@ object RetrofitClient {
     private val client = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)
         .readTimeout(15, TimeUnit.SECONDS)
+        .addInterceptor(AuthInterceptor())
         .build()
 
     val authApi: AuthApi by lazy {
