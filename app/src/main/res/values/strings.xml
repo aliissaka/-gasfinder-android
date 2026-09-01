@@ -37,4 +37,6 @@
     <string name="detail_status_low">Stock faible</string>
     <string name="detail_status_out">Rupture</string>
     <string name="cd_back">Retour</string>
+    <string name="login_error_failed">Échec de connexion : %1$d</string>
+    <string name="login_error_generic">Erreur : %1$s</string>
 </resources>

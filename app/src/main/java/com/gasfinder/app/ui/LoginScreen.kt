@@ -5,6 +5,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.gasfinder.app.R
 import com.gasfinder.app.network.LoginRequest
@@ -19,6 +20,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
     var statusMessage by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -59,10 +61,10 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
                                 onLoginSuccess()
                             }
                         } else {
-                            statusMessage = "Login failed: ${response.code()}"
+                            statusMessage = context.getString(R.string.login_error_failed, response.code())
                         }
                     } catch (e: Exception) {
-                        statusMessage = "Error: ${e.message}"
+                        statusMessage = context.getString(R.string.login_error_generic, e.message)
                     } finally {
                         isLoading = false
                     }

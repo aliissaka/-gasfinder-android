@@ -9,6 +9,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.gasfinder.app.R
 import com.gasfinder.app.network.RetailerDetail
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun RetailerDetailScreen(retailerId: String, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     var detail by remember { mutableStateOf<RetailerDetail?>(null) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf("") }
@@ -31,10 +33,10 @@ fun RetailerDetailScreen(retailerId: String, onBack: () -> Unit) {
                 if (response.isSuccessful) {
                     detail = response.body()
                 } else {
-                    errorMessage = "Erreur : ${response.code()}"
+                    errorMessage = context.getString(R.string.detail_error_server, response.code())
                 }
             } catch (e: Exception) {
-                errorMessage = "Erreur : ${e.message}"
+                errorMessage = context.getString(R.string.detail_error_generic, e.message)
             } finally {
                 isLoading = false
             }
