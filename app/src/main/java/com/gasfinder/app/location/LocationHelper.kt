@@ -11,28 +11,19 @@ class LocationHelper(context: Context) {
 
     @SuppressLint("MissingPermission")
     fun getCurrentLocation(onResult: (Location?) -> Unit) {
-        fusedClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                onResult(location)
-            } else {
-                // If last location is null, request a fresh one
-                val request = LocationRequest.Builder(
-                    Priority.PRIORITY_HIGH_ACCURACY, 5000
-                ).build()
+        val request = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, 5000
+        ).setMaxUpdates(1).build()
 
-                fusedClient.requestLocationUpdates(
-                    request,
-                    object : LocationCallback() {
-                        override fun onLocationResult(result: LocationResult) {
-                            fusedClient.removeLocationUpdates(this)
-                            onResult(result.lastLocation)
-                        }
-                    },
-                    Looper.getMainLooper()
-                )
-            }
-        }.addOnFailureListener {
-            onResult(null)
-        }
+        fusedClient.requestLocationUpdates(
+            request,
+            object : LocationCallback() {
+                override fun onLocationResult(result: LocationResult) {
+                    fusedClient.removeLocationUpdates(this)
+                    onResult(result.lastLocation)
+                }
+            },
+            Looper.getMainLooper()
+        )
     }
 }

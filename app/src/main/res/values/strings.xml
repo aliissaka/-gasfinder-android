@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GasFinder</string>
+
+    <!-- Login -->
+    <string name="login_title">Connexion GasFinder</string>
+    <string name="login_phone_label">Téléphone</string>
+    <string name="login_pin_label">Code PIN</string>
+    <string name="login_button">Connexion</string>
+    <string name="login_button_loading">Connexion en cours...</string>
+
+    <!-- Home -->
+    <string name="home_welcome">Bienvenue sur GasFinder</string>
+    <string name="home_role">Rôle : %1$s</string>
+    <string name="home_role_unknown">inconnu</string>
+    <string name="home_grant_location">Autoriser la localisation</string>
+    <string name="home_search_button">Trouver des revendeurs proches (5 km)</string>
+    <string name="home_search_button_loading">Recherche en cours...</string>
+    <string name="home_logout">Déconnexion</string>
+    <string name="home_error_no_location">Impossible d\'obtenir la position. Vérifiez que le GPS est activé.</string>
+    <string name="home_error_no_retailers">Aucun revendeur trouvé dans un rayon de 5 km.</string>
+    <string name="home_error_server">Erreur serveur : %1$d</string>
+    <string name="home_error_generic">Erreur : %1$s</string>
+    <string name="home_distance_away">%1$.2f km</string>
+    <string name="home_brands_in_stock">%1$d marque(s) en stock</string>
+
+    <!-- Retailer Detail -->
+    <string name="detail_title_fallback">Détail du revendeur</string>
+    <string name="detail_phone">Téléphone : %1$s</string>
+    <string name="detail_hours">Horaires : %1$s</string>
+    <string name="detail_stock_title">Disponibilité du stock</string>
+    <string name="detail_no_stock">Aucune information de stock disponible.</string>
+    <string name="detail_quantity_kg">%1$.1f kg</string>
+    <string name="detail_error_server">Erreur : %1$d</string>
+    <string name="detail_error_generic">Erreur : %1$s</string>
+    <string name="detail_status_available">Disponible</string>
+    <string name="detail_status_low">Stock faible</string>
+    <string name="detail_status_out">Rupture</string>
+    <string name="cd_back">Retour</string>
+</resources>

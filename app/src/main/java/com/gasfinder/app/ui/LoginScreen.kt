@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.gasfinder.app.R
 import com.gasfinder.app.network.LoginRequest
 import com.gasfinder.app.network.RetrofitClient
 import com.gasfinder.app.network.TokenManager
@@ -24,13 +26,13 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             .padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        Text("GasFinder Login", style = MaterialTheme.typography.headlineSmall)
+        Text(stringResource(R.string.login_title), style = MaterialTheme.typography.headlineSmall)
         Spacer(modifier = Modifier.height(24.dp))
 
         OutlinedTextField(
             value = phone,
             onValueChange = { phone = it },
-            label = { Text("Phone") },
+            label = { Text(stringResource(R.string.login_phone_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(12.dp))
@@ -38,7 +40,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
         OutlinedTextField(
             value = pin,
             onValueChange = { pin = it },
-            label = { Text("PIN") },
+            label = { Text(stringResource(R.string.login_pin_label)) },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(24.dp))
@@ -69,7 +71,7 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
             enabled = !isLoading,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(if (isLoading) "Logging in..." else "Login")
+            Text(if (isLoading) stringResource(R.string.login_button_loading) else stringResource(R.string.login_button))
         }
 
         Spacer(modifier = Modifier.height(16.dp))

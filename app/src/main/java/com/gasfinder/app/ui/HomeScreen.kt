@@ -116,6 +116,9 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit) {
         Spacer(modifier = Modifier.height(8.dp))
         if (errorMessage.isNotEmpty()) {
             Text(errorMessage, color = MaterialTheme.colorScheme.error)
+        if (userLat != null && userLon != null) {
+            Text("Debug: lat=$userLat, lon=$userLon", style = MaterialTheme.typography.bodySmall)
+        }
         }
 
         Spacer(modifier = Modifier.height(8.dp))

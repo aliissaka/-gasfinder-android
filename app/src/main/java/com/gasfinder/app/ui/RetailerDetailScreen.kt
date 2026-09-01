@@ -8,7 +8,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.gasfinder.app.R
 import com.gasfinder.app.network.RetailerDetail
 import com.gasfinder.app.network.RetrofitClient
 import com.gasfinder.app.network.StockItemDto
@@ -29,10 +31,10 @@ fun RetailerDetailScreen(retailerId: String, onBack: () -> Unit) {
                 if (response.isSuccessful) {
                     detail = response.body()
                 } else {
-                    errorMessage = "Error: ${response.code()}"
+                    errorMessage = "Erreur : ${response.code()}"
                 }
             } catch (e: Exception) {
-                errorMessage = "Error: ${e.message}"
+                errorMessage = "Erreur : ${e.message}"
             } finally {
                 isLoading = false
             }
@@ -42,10 +44,10 @@ fun RetailerDetailScreen(retailerId: String, onBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(detail?.shopName ?: "Retailer Detail") },
+                title = { Text(detail?.shopName ?: stringResource(R.string.detail_title_fallback)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -86,21 +88,21 @@ fun RetailerDetailContent(detail: RetailerDetail) {
                 Spacer(modifier = Modifier.height(4.dp))
             }
             detail.phone?.let {
-                Text("Phone: $it", style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.detail_phone, it), style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(4.dp))
             }
             detail.openingHours?.let {
-                Text("Hours: $it", style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.detail_hours, it), style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(4.dp))
             }
             HorizontalDivider(modifier = Modifier.padding(vertical = 12.dp))
-            Text("Stock Availability", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.detail_stock_title), style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(8.dp))
         }
 
         if (detail.stock.isEmpty()) {
             item {
-                Text("No stock information available.", style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.detail_no_stock), style = MaterialTheme.typography.bodyMedium)
             }
         } else {
             items(detail.stock) { item ->
@@ -128,18 +130,25 @@ fun StockItemCard(item: StockItemDto) {
                 else -> MaterialTheme.colorScheme.onSurface
             }
 
+            val statusLabel = when (item.status.lowercase()) {
+                "available" -> stringResource(R.string.detail_status_available)
+                "low" -> stringResource(R.string.detail_status_low)
+                "out" -> stringResource(R.string.detail_status_out)
+                else -> item.status
+            }
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = item.status.replaceFirstChar { it.uppercase() },
+                    text = statusLabel,
                     color = statusColor,
                     style = MaterialTheme.typography.labelSmall
                 )
                 item.quantity?.let {
                     Text(
-                        "%.1f kg".format(it),
+                        stringResource(R.string.detail_quantity_kg, it),
                         style = MaterialTheme.typography.bodySmall
                     )
                 }
