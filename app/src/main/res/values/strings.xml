@@ -39,4 +39,21 @@
     <string name="cd_back">Retour</string>
     <string name="login_error_failed">Échec de connexion : %1$d</string>
     <string name="login_error_generic">Erreur : %1$s</string>
+    <string name="register_link">Pas encore inscrit ? Créer une boutique</string>
+    <string name="register_title">Inscription revendeur</string>
+    <string name="register_owner_name">Nom du propriétaire</string>
+    <string name="register_owner_phone">Téléphone du propriétaire</string>
+    <string name="register_pin_label">Code PIN (4 à 8 chiffres)</string>
+    <string name="register_shop_name">Nom de la boutique</string>
+    <string name="register_shop_phone">Téléphone de la boutique</string>
+    <string name="register_shop_address">Adresse (optionnel)</string>
+    <string name="register_location_detecting">Détection de la position...</string>
+    <string name="register_location_detected">Position détectée : %1$.4f, %2$.4f</string>
+    <string name="register_location_retry">Réessayer</string>
+    <string name="register_location_error">Impossible de détecter la position. Vérifiez que le GPS est activé.</string>
+    <string name="register_button">Créer la boutique</string>
+    <string name="register_button_loading">Création en cours...</string>
+    <string name="register_error_failed">Échec de l\'inscription : %1$d</string>
+    <string name="register_error_generic">Erreur : %1$s</string>
+    <string name="register_error_no_location">Position requise avant de continuer.</string>
 </resources>

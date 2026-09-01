@@ -14,7 +14,7 @@ import com.gasfinder.app.network.TokenManager
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(onLoginSuccess: () -> Unit) {
+fun LoginScreen(onLoginSuccess: () -> Unit, onRegisterClick: () -> Unit) {
     var phone by remember { mutableStateOf("") }
     var pin by remember { mutableStateOf("") }
     var statusMessage by remember { mutableStateOf("") }
@@ -78,5 +78,9 @@ fun LoginScreen(onLoginSuccess: () -> Unit) {
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(statusMessage)
+        Spacer(modifier = Modifier.height(16.dp))
+        TextButton(onClick = onRegisterClick) {
+            Text(stringResource(R.string.register_link))
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.gasfinder.app.network.TokenManager
 private const val ROUTE_LOGIN = "login"
 private const val ROUTE_HOME = "home"
 private const val ROUTE_DETAIL = "detail/{retailerId}"
+private const val ROUTE_REGISTER = "register"
 
 @Composable
 fun GasFinderNavGraph() {
@@ -20,11 +21,16 @@ fun GasFinderNavGraph() {
 
     NavHost(navController = navController, startDestination = startDestination) {
         composable(ROUTE_LOGIN) {
-            LoginScreen(onLoginSuccess = {
-                navController.navigate(ROUTE_HOME) {
-                    popUpTo(ROUTE_LOGIN) { inclusive = true }
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(ROUTE_HOME) {
+                        popUpTo(ROUTE_LOGIN) { inclusive = true }
+                    }
+                },
+                onRegisterClick = {
+                    navController.navigate(ROUTE_REGISTER)
                 }
-            })
+            )
         }
         composable(ROUTE_HOME) {
             HomeScreen(
@@ -45,6 +51,16 @@ fun GasFinderNavGraph() {
             val retailerId = backStackEntry.arguments?.getString("retailerId") ?: ""
             RetailerDetailScreen(
                 retailerId = retailerId,
+                onBack = { navController.popBackStack() }
+            )
+        }
+        composable(ROUTE_REGISTER) {
+            RegisterScreen(
+                onRegisterSuccess = {
+                    navController.navigate(ROUTE_HOME) {
+                        popUpTo(ROUTE_LOGIN) { inclusive = true }
+                    }
+                },
                 onBack = { navController.popBackStack() }
             )
         }
