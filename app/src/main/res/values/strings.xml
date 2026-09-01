@@ -23,6 +23,7 @@
     <string name="home_error_generic">Erreur : %1$s</string>
     <string name="home_distance_away">%1$.2f km</string>
     <string name="home_brands_in_stock">%1$d marque(s) en stock</string>
+    <string name="home_admin_button">Administration</string>
 
     <!-- Retailer Detail -->
     <string name="detail_title_fallback">Détail du revendeur</string>
@@ -56,4 +57,11 @@
     <string name="register_error_failed">Échec de l\'inscription : %1$d</string>
     <string name="register_error_generic">Erreur : %1$s</string>
     <string name="register_error_no_location">Position requise avant de continuer.</string>
+    <string name="admin_title">Boutiques en attente</string>
+    <string name="admin_empty">Aucune boutique en attente.</string>
+    <string name="admin_approve">Approuver</string>
+    <string name="admin_reject">Rejeter</string>
+    <string name="admin_error_generic">Erreur : %1$s</string>
+    <string name="admin_error_server">Erreur serveur : %1$d</string>
+    <string name="admin_status_updated">Statut mis à jour.</string>
 </resources>

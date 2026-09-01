@@ -13,8 +13,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.gasfinder.app.R
 import com.gasfinder.app.location.LocationHelper
 import com.gasfinder.app.network.RetailerListItem
 import com.gasfinder.app.network.RetrofitClient
@@ -22,7 +24,7 @@ import com.gasfinder.app.network.TokenManager
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit) {
+fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminClick: () -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -39,7 +41,10 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit) {
         )
     }
 
-    // Define search logic as a lambda BEFORE the launcher that uses it
+    val noLocationError = stringResource(R.string.home_error_no_location)
+    val noRetailersError = stringResource(R.string.home_error_no_retailers)
+    val isAdmin = TokenManager.getRole() == "Admin"
+
     val searchNearby: () -> Unit = {
         isLoading = true
         errorMessage = ""
@@ -48,7 +53,7 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit) {
         LocationHelper(context).getCurrentLocation { location ->
             if (location == null) {
                 isLoading = false
-                errorMessage = "Could not get location. Make sure GPS is on."
+                errorMessage = noLocationError
                 return@getCurrentLocation
             }
 
@@ -66,13 +71,13 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit) {
                     if (response.isSuccessful) {
                         retailers = response.body() ?: emptyList()
                         if (retailers.isEmpty()) {
-                            errorMessage = "No retailers found within 5km."
+                            errorMessage = noRetailersError
                         }
                     } else {
-                        errorMessage = "Server error: ${response.code()}"
+                        errorMessage = context.getString(R.string.home_error_server, response.code())
                     }
                 } catch (e: Exception) {
-                    errorMessage = "Error: ${e.message}"
+                    errorMessage = context.getString(R.string.home_error_generic, e.message)
                 } finally {
                     isLoading = false
                 }
@@ -92,16 +97,29 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text("Welcome to GasFinder", style = MaterialTheme.typography.headlineSmall)
-        Text("Role: ${TokenManager.getRole() ?: "unknown"}", style = MaterialTheme.typography.bodyMedium)
+        Text(stringResource(R.string.home_welcome), style = MaterialTheme.typography.headlineSmall)
+        Text(
+            stringResource(R.string.home_role, TokenManager.getRole() ?: stringResource(R.string.home_role_unknown)),
+            style = MaterialTheme.typography.bodyMedium
+        )
         Spacer(modifier = Modifier.height(16.dp))
+
+        if (isAdmin) {
+            OutlinedButton(
+                onClick = onAdminClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.home_admin_button))
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         if (!hasPermission) {
             Button(
                 onClick = { permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION) },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Grant Location Permission")
+                Text(stringResource(R.string.home_grant_location))
             }
         } else {
             Button(
@@ -109,16 +127,13 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit) {
                 enabled = !isLoading,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(if (isLoading) "Searching..." else "Find Nearby Retailers (5km)")
+                Text(if (isLoading) stringResource(R.string.home_search_button_loading) else stringResource(R.string.home_search_button))
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
         if (errorMessage.isNotEmpty()) {
             Text(errorMessage, color = MaterialTheme.colorScheme.error)
-        if (userLat != null && userLon != null) {
-            Text("Debug: lat=$userLat, lon=$userLon", style = MaterialTheme.typography.bodySmall)
-        }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
@@ -143,7 +158,7 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit) {
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Logout")
+            Text(stringResource(R.string.home_logout))
         }
     }
 }
@@ -175,7 +190,7 @@ fun RetailerCard(
                     retailer.latitude, retailer.longitude,
                     results
                 )
-                "%.2f km away".format(results[0] / 1000)
+                stringResource(R.string.home_distance_away, results[0] / 1000)
             } else {
                 ""
             }
@@ -186,7 +201,7 @@ fun RetailerCard(
 
             if (retailer.availableBrandIds.isNotEmpty()) {
                 Text(
-                    "${retailer.availableBrandIds.size} brand(s) in stock",
+                    stringResource(R.string.home_brands_in_stock, retailer.availableBrandIds.size),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.primary
                 )
