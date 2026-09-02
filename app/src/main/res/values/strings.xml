@@ -64,4 +64,15 @@
     <string name="admin_error_generic">Erreur : %1$s</string>
     <string name="admin_error_server">Erreur serveur : %1$d</string>
     <string name="admin_status_updated">Statut mis à jour.</string>
+    <string name="stock_title">Mon stock</string>
+    <string name="stock_status_available">Disponible</string>
+    <string name="stock_status_low">Stock faible</string>
+    <string name="stock_status_out">Rupture</string>
+    <string name="stock_quantity_hint">Quantité (kg, optionnel)</string>
+    <string name="stock_save_button">Enregistrer</string>
+    <string name="stock_save_button_loading">Enregistrement...</string>
+    <string name="stock_saved">Stock mis à jour.</string>
+    <string name="stock_error_generic">Erreur : %1$s</string>
+    <string name="stock_error_server">Erreur serveur : %1$d</string>
+    <string name="home_stock_button">Gérer mon stock</string>
 </resources>

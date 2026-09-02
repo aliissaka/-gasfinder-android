@@ -34,4 +34,13 @@ interface AuthApi {
         @Path("id") id: String,
         @Body request: RetailerStatusUpdateRequest
     ): Response<Unit>
+
+    @GET("api/sync/brands")
+    suspend fun getAllBrands(@Query("cursor") cursor: String? = null): Response<BrandSyncResponse>
+
+    @GET("api/stock/me")
+    suspend fun getMyStock(): Response<List<StockItemDto>>
+
+    @POST("api/stock/updates")
+    suspend fun submitStockUpdates(@Body request: StockUpdateBatchRequest): Response<StockUpdateBatchResponse>
 }

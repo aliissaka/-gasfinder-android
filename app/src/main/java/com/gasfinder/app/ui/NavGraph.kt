@@ -14,6 +14,7 @@ private const val ROUTE_HOME = "home"
 private const val ROUTE_DETAIL = "detail/{retailerId}"
 private const val ROUTE_REGISTER = "register"
 private const val ROUTE_ADMIN = "admin"
+private const val ROUTE_STOCK = "stock"
 
 @Composable
 fun GasFinderNavGraph() {
@@ -45,6 +46,9 @@ fun GasFinderNavGraph() {
                 },
                 onAdminClick = {
                     navController.navigate(ROUTE_ADMIN)
+                },
+                onStockClick = {
+                    navController.navigate(ROUTE_STOCK)
                 }
             )
         }
@@ -70,6 +74,9 @@ fun GasFinderNavGraph() {
         }
         composable(ROUTE_ADMIN) {
             AdminScreen(onBack = { navController.popBackStack() })
+        }
+        composable(ROUTE_STOCK) {
+            StockScreen(onBack = { navController.popBackStack() })
         }
     }
 }

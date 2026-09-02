@@ -24,7 +24,7 @@ import com.gasfinder.app.network.TokenManager
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminClick: () -> Unit) {
+fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminClick: () -> Unit, onStockClick: () -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -44,6 +44,7 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminC
     val noLocationError = stringResource(R.string.home_error_no_location)
     val noRetailersError = stringResource(R.string.home_error_no_retailers)
     val isAdmin = TokenManager.getRole() == "Admin"
+    val isRetailer = TokenManager.getRole() == "Retailer"
 
     val searchNearby: () -> Unit = {
         isLoading = true
