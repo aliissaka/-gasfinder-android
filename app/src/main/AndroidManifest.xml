@@ -4,7 +4,6 @@
 
     <application
         android:label="GasFinder"
-        android:usesCleartextTraffic="true"
         android:allowBackup="true">
         <activity
             android:name=".MainActivity"
