@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.gasfinder.app.network.TokenManager
 
 private const val ROUTE_LOGIN = "login"
 private const val ROUTE_HOME = "home"
@@ -19,25 +18,12 @@ private const val ROUTE_STOCK = "stock"
 @Composable
 fun GasFinderNavGraph() {
     val navController: NavHostController = rememberNavController()
-    val startDestination = if (TokenManager.isLoggedIn()) ROUTE_HOME else ROUTE_LOGIN
 
-    NavHost(navController = navController, startDestination = startDestination) {
-        composable(ROUTE_LOGIN) {
-            LoginScreen(
-                onLoginSuccess = {
-                    navController.navigate(ROUTE_HOME) {
-                        popUpTo(ROUTE_LOGIN) { inclusive = true }
-                    }
-                },
-                onRegisterClick = {
-                    navController.navigate(ROUTE_REGISTER)
-                }
-            )
-        }
+    NavHost(navController = navController, startDestination = ROUTE_HOME) {
         composable(ROUTE_HOME) {
             HomeScreen(
                 onLogout = {
-                    navController.navigate(ROUTE_LOGIN) {
+                    navController.navigate(ROUTE_HOME) {
                         popUpTo(ROUTE_HOME) { inclusive = true }
                     }
                 },
@@ -49,6 +35,21 @@ fun GasFinderNavGraph() {
                 },
                 onStockClick = {
                     navController.navigate(ROUTE_STOCK)
+                },
+                onLoginClick = {
+                    navController.navigate(ROUTE_LOGIN)
+                }
+            )
+        }
+        composable(ROUTE_LOGIN) {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate(ROUTE_HOME) {
+                        popUpTo(ROUTE_HOME) { inclusive = true }
+                    }
+                },
+                onRegisterClick = {
+                    navController.navigate(ROUTE_REGISTER)
                 }
             )
         }
@@ -66,7 +67,7 @@ fun GasFinderNavGraph() {
             RegisterScreen(
                 onRegisterSuccess = {
                     navController.navigate(ROUTE_HOME) {
-                        popUpTo(ROUTE_LOGIN) { inclusive = true }
+                        popUpTo(ROUTE_HOME) { inclusive = true }
                     }
                 },
                 onBack = { navController.popBackStack() }

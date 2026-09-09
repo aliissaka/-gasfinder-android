@@ -75,4 +75,5 @@
     <string name="stock_error_generic">Erreur : %1$s</string>
     <string name="stock_error_server">Erreur serveur : %1$d</string>
     <string name="home_stock_button">Gérer mon stock</string>
+    <string name="home_login_button">Se connecter / Créer une boutique</string>
 </resources>

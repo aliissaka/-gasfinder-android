@@ -24,7 +24,13 @@ import com.gasfinder.app.network.TokenManager
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminClick: () -> Unit, onStockClick: () -> Unit) {
+fun HomeScreen(
+    onLogout: () -> Unit,
+    onRetailerClick: (String) -> Unit,
+    onAdminClick: () -> Unit,
+    onStockClick: () -> Unit,
+    onLoginClick: () -> Unit
+) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -43,6 +49,7 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminC
 
     val noLocationError = stringResource(R.string.home_error_no_location)
     val noRetailersError = stringResource(R.string.home_error_no_retailers)
+    val isLoggedIn = TokenManager.isLoggedIn()
     val isAdmin = TokenManager.getRole() == "Admin"
     val isRetailer = TokenManager.getRole() == "Retailer"
 
@@ -99,10 +106,12 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminC
             .padding(16.dp)
     ) {
         Text(stringResource(R.string.home_welcome), style = MaterialTheme.typography.headlineSmall)
-        Text(
-            stringResource(R.string.home_role, TokenManager.getRole() ?: stringResource(R.string.home_role_unknown)),
-            style = MaterialTheme.typography.bodyMedium
-        )
+        if (isLoggedIn) {
+            Text(
+                stringResource(R.string.home_role, TokenManager.getRole() ?: stringResource(R.string.home_role_unknown)),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
         Spacer(modifier = Modifier.height(16.dp))
 
         if (isAdmin) {
@@ -162,14 +171,23 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminC
         }
 
         Spacer(modifier = Modifier.height(8.dp))
-        Button(
-            onClick = {
-                TokenManager.clear()
-                onLogout()
-            },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(R.string.home_logout))
+        if (isLoggedIn) {
+            Button(
+                onClick = {
+                    TokenManager.clear()
+                    onLogout()
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.home_logout))
+            }
+        } else {
+            OutlinedButton(
+                onClick = onLoginClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.home_login_button))
+            }
         }
     }
 }
