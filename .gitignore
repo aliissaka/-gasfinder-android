@@ -14,3 +14,7 @@ local.properties
 *.apk
 *.ap_
 *.dex
+
+# Editor artifacts
+*.swp
+*.bak
