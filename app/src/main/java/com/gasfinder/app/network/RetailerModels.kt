@@ -15,6 +15,7 @@ data class StockItemDto(
     val brandId: String,
     val brandName: String,
     val logoUrl: String,
+    val bottleSize: String,
     val status: String,
     val quantity: Int?,
     val lastUpdatedAt: String

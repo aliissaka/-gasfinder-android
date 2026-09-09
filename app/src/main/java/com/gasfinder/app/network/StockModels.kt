@@ -19,6 +19,7 @@ data class BrandSyncResponse(
 data class StockUpdateRequest(
     val clientOutboxId: String = UUID.randomUUID().toString(),
     val brandId: String,
+    val bottleSize: String,
     val status: String,
     val quantity: Int?,
     val reportedAt: String

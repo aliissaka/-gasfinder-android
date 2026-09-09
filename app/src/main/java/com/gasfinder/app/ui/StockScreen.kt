@@ -18,8 +18,12 @@ import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.format.DateTimeFormatter
 
-private data class BrandStockState(
-    val brand: BrandDto,
+private val BOTTLE_SIZES = listOf("Kg6", "Kg12")
+
+private data class BrandBottleState(
+    val brandId: String,
+    val brandName: String,
+    val bottleSize: String,
     var status: String,
     var quantityText: String
 )
@@ -30,7 +34,7 @@ fun StockScreen(onBack: () -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    var brandStates by remember { mutableStateOf<List<BrandStockState>>(emptyList()) }
+    var rows by remember { mutableStateOf<List<BrandBottleState>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var isSaving by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
@@ -49,15 +53,19 @@ fun StockScreen(onBack: () -> Unit) {
                     } else {
                         emptyList()
                     }
-                    val stockByBrandId = currentStock.associateBy { it.brandId }
+                    val stockByKey = currentStock.associateBy { it.brandId to it.bottleSize }
 
-                    brandStates = brands.sortedBy { it.displayOrder }.map { brand ->
-                        val existing = stockByBrandId[brand.id]
-                        BrandStockState(
-                            brand = brand,
-                            status = existing?.status?.lowercase() ?: "out",
-                            quantityText = existing?.quantity?.toString() ?: ""
-                        )
+                    rows = brands.sortedBy { it.displayOrder }.flatMap { brand ->
+                        BOTTLE_SIZES.map { size ->
+                            val existing = stockByKey[brand.id to size]
+                            BrandBottleState(
+                                brandId = brand.id,
+                                brandName = brand.name,
+                                bottleSize = size,
+                                status = existing?.status?.lowercase() ?: "out",
+                                quantityText = existing?.quantity?.toString() ?: ""
+                            )
+                        }
                     }
                 } else {
                     errorMessage = context.getString(R.string.stock_error_server, brandsResponse.code())
@@ -103,17 +111,19 @@ fun StockScreen(onBack: () -> Unit) {
                 }
             } else {
                 LazyColumn(modifier = Modifier.weight(1f)) {
-                    items(brandStates) { state ->
-                        BrandStockRow(
-                            state = state,
+                    items(rows) { row ->
+                        BrandBottleRow(
+                            row = row,
                             onStatusChange = { newStatus ->
-                                brandStates = brandStates.map {
-                                    if (it.brand.id == state.brand.id) it.copy(status = newStatus) else it
+                                rows = rows.map {
+                                    if (it.brandId == row.brandId && it.bottleSize == row.bottleSize)
+                                        it.copy(status = newStatus) else it
                                 }
                             },
                             onQuantityChange = { newQty ->
-                                brandStates = brandStates.map {
-                                    if (it.brand.id == state.brand.id) it.copy(quantityText = newQty) else it
+                                rows = rows.map {
+                                    if (it.brandId == row.brandId && it.bottleSize == row.bottleSize)
+                                        it.copy(quantityText = newQty) else it
                                 }
                             }
                         )
@@ -129,10 +139,13 @@ fun StockScreen(onBack: () -> Unit) {
                         savedMessage = ""
                         scope.launch {
                             try {
-                                val nowIso = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(Instant.now().atOffset(java.time.ZoneOffset.UTC))
-                                val updates = brandStates.map {
+                                val nowIso = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(
+                                    Instant.now().atOffset(java.time.ZoneOffset.UTC)
+                                )
+                                val updates = rows.map {
                                     StockUpdateRequest(
-                                        brandId = it.brand.id,
+                                        brandId = it.brandId,
+                                        bottleSize = it.bottleSize,
                                         status = it.status,
                                         quantity = it.quantityText.toIntOrNull(),
                                         reportedAt = nowIso
@@ -163,16 +176,17 @@ fun StockScreen(onBack: () -> Unit) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun BrandStockRow(
-    state: BrandStockState,
+private fun BrandBottleRow(
+    row: BrandBottleState,
     onStatusChange: (String) -> Unit,
     onQuantityChange: (String) -> Unit
 ) {
+    val sizeLabel = if (row.bottleSize == "Kg6") "6 kg" else "12 kg"
+
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(12.dp)) {
-            Text(state.brand.name, style = MaterialTheme.typography.titleSmall)
+            Text("${row.brandName} — $sizeLabel", style = MaterialTheme.typography.titleSmall)
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
@@ -180,7 +194,7 @@ private fun BrandStockRow(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 FilterChip(
-                    selected = state.status == "available",
+                    selected = row.status == "available",
                     onClick = { onStatusChange("available") },
                     label = {
                         Text(
@@ -192,7 +206,7 @@ private fun BrandStockRow(
                     modifier = Modifier.weight(1f)
                 )
                 FilterChip(
-                    selected = state.status == "low",
+                    selected = row.status == "low",
                     onClick = { onStatusChange("low") },
                     label = {
                         Text(
@@ -204,7 +218,7 @@ private fun BrandStockRow(
                     modifier = Modifier.weight(1f)
                 )
                 FilterChip(
-                    selected = state.status == "out",
+                    selected = row.status == "out",
                     onClick = { onStatusChange("out") },
                     label = {
                         Text(
@@ -219,7 +233,7 @@ private fun BrandStockRow(
 
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
-                value = state.quantityText,
+                value = row.quantityText,
                 onValueChange = onQuantityChange,
                 label = { Text(stringResource(R.string.stock_quantity_hint)) },
                 modifier = Modifier.fillMaxWidth()
