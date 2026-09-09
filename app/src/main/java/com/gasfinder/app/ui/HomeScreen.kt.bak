@@ -120,9 +120,11 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminC
                 onClick = onStockClick,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.home_stock_button))
+                Text("Manage Stock")
             }
             Spacer(modifier = Modifier.height(8.dp))
+        
+
         }
 
         if (!hasPermission) {
@@ -143,11 +145,35 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminC
         }
 
         Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        if (isRetailer) {
+            OutlinedButton(
+                onClick = onStockClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Manage Stock")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        
+
         if (errorMessage.isNotEmpty()) {
             Text(errorMessage, color = MaterialTheme.colorScheme.error)
         }
 
         Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        if (isRetailer) {
+            OutlinedButton(
+                onClick = onStockClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Manage Stock")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        
+
 
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(retailers) { retailer ->
@@ -158,10 +184,34 @@ fun HomeScreen(onLogout: () -> Unit, onRetailerClick: (String) -> Unit, onAdminC
                     onClick = { onRetailerClick(retailer.id) }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        if (isRetailer) {
+            OutlinedButton(
+                onClick = onStockClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Manage Stock")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        
+
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
+        }
+
+        if (isRetailer) {
+            OutlinedButton(
+                onClick = onStockClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Manage Stock")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+        
+
         Button(
             onClick = {
                 TokenManager.clear()

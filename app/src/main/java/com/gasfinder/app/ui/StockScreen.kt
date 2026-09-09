@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.gasfinder.app.R
 import com.gasfinder.app.network.*
 import kotlinx.coroutines.launch
-import java.time.OffsetDateTime
+import java.time.Instant
 import java.time.format.DateTimeFormatter
 
 private data class BrandStockState(
@@ -129,7 +129,7 @@ fun StockScreen(onBack: () -> Unit) {
                         savedMessage = ""
                         scope.launch {
                             try {
-                                val nowIso = OffsetDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                                val nowIso = DateTimeFormatter.ISO_OFFSET_DATE_TIME.format(Instant.now().atOffset(java.time.ZoneOffset.UTC))
                                 val updates = brandStates.map {
                                     StockUpdateRequest(
                                         brandId = it.brand.id,
@@ -175,21 +175,45 @@ private fun BrandStockRow(
             Text(state.brand.name, style = MaterialTheme.typography.titleSmall)
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 FilterChip(
                     selected = state.status == "available",
                     onClick = { onStatusChange("available") },
-                    label = { Text(stringResource(R.string.stock_status_available)) }
+                    label = {
+                        Text(
+                            stringResource(R.string.stock_status_available),
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
                 )
                 FilterChip(
                     selected = state.status == "low",
                     onClick = { onStatusChange("low") },
-                    label = { Text(stringResource(R.string.stock_status_low)) }
+                    label = {
+                        Text(
+                            stringResource(R.string.stock_status_low),
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
                 )
                 FilterChip(
                     selected = state.status == "out",
                     onClick = { onStatusChange("out") },
-                    label = { Text(stringResource(R.string.stock_status_out)) }
+                    label = {
+                        Text(
+                            stringResource(R.string.stock_status_out),
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    },
+                    modifier = Modifier.weight(1f)
                 )
             }
 
