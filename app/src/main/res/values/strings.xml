@@ -31,7 +31,7 @@
     <string name="detail_hours">Horaires : %1$s</string>
     <string name="detail_stock_title">Disponibilité du stock</string>
     <string name="detail_no_stock">Aucune information de stock disponible.</string>
-    <string name="detail_quantity_kg">%1$.1f kg</string>
+    <string name="detail_quantity_kg">%1$d bouteille(s)</string>
     <string name="detail_error_server">Erreur : %1$d</string>
     <string name="detail_error_generic">Erreur : %1$s</string>
     <string name="detail_status_available">Disponible</string>
@@ -68,7 +68,7 @@
     <string name="stock_status_available">Disponible</string>
     <string name="stock_status_low">Stock faible</string>
     <string name="stock_status_out">Rupture</string>
-    <string name="stock_quantity_hint">Quantité (kg, optionnel)</string>
+    <string name="stock_quantity_hint">Nombre de bouteilles (optionnel)</string>
     <string name="stock_save_button">Enregistrer</string>
     <string name="stock_save_button_loading">Enregistrement...</string>
     <string name="stock_saved">Stock mis à jour.</string>
